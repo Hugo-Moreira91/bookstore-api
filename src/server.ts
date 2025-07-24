@@ -1,17 +1,13 @@
-const http = require('http');
+import express from "express";
+import booksRoutes from "./routes/booksRoutes";
 
-const server = http.createServer((req, res) => {
-    res.setHeader('Content-Type', 'text/plain');
+const app = express();
+const port = 3000;
 
-    if (req.url === '/') {
-        res.statusCode = 200;
-        res.end('Home page');
-    } else if (req.url === '/about') {
-        res.statusCode = 200;
-        res.end('About page');
-    }
+app.use(express.json());
+
+app.use("/books", booksRoutes);
+
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}/`);
 });
-
-server.listen(3000, () => {
-    console.log('Server running on http://localhost:3000/');
-})
