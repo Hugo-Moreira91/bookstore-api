@@ -37,8 +37,7 @@ bookRouter.get("/:id", async (req, res) => {
 });
 
 bookRouter.post("/", async (req, res) => {
-  const { title, publication_year, language, price, author_id, category_id } =
-    req.body;
+  const { title, publication_year, language, price, author_id, category_id } = req.body;
 
   try {
     await prisma.book.create({
@@ -114,6 +113,100 @@ bookRouter.delete("/:id", async (req, res) => {
   }
 
   res.status(200).send();
+});
+
+bookRouter.get("/category/:categoryId", async (req, res) => {
+  const categoryId = Number(req.params.categoryId);
+
+  try {
+    const category = await prisma.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+
+    if (!category) {
+      return res.status(404).send({ message: "Category not found." });
+    }
+
+    const booksFilteredByCategory = await prisma.book.findMany({
+      orderBy: {
+        title: "asc",
+      },
+      include: {
+        categories: true,
+      },
+      where: {
+        category_id: categoryId,
+      },
+    });
+
+    res.json(booksFilteredByCategory);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return res.status(500).send({ message: "Failed to listed books by genre." });
+  }
+});
+
+bookRouter.get("/author/:authorId", async (req, res) => {
+  const authorId = Number(req.params.authorId);
+
+  try {
+    const author = await prisma.author.findUnique({
+      where: {
+        id: authorId,
+      },
+    });
+
+    if (!author) {
+      return res.status(404).send({ message: "Author not found." });
+    }
+
+    const booksFilteredByAuthor = await prisma.book.findMany({
+      orderBy: {
+        title: "asc",
+      },
+      include: {
+        authors: true,
+      },
+      where: {
+        author_id: authorId,
+      },
+    });
+
+    res.json(booksFilteredByAuthor);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return res.status(500).send({ message: "Failed to listed books by author." });
+  }
+});
+
+bookRouter.get("/year/:year", async (req, res) => {
+  try {
+    if (req.params.year.length != 4) {
+      return res.status(404).send({ message: "Invalid year. Please, verify." });
+    }
+
+    const year = Number(req.params.year);
+
+    const booksPublishedAfter = await prisma.book.findMany({
+      orderBy: {
+        title: "asc",
+      },
+      where: {
+        publication_year: {
+          gt: year,
+        },
+      },
+    });
+
+    res.json(booksPublishedAfter);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: "Failed to listed books by publication year." });
+  }
 });
 
 export default bookRouter;
