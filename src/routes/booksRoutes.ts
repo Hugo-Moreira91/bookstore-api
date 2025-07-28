@@ -8,8 +8,8 @@ bookRouter.get("/", async (_, res) => {
   const books = await prisma.book.findMany({
     orderBy: { title: "asc" },
     include: {
-      authors: true,
-      categories: true,
+      author: true,
+      category: true,
     },
   });
   res.json(books);
@@ -134,7 +134,7 @@ bookRouter.get("/category/:categoryId", async (req, res) => {
         title: "asc",
       },
       include: {
-        categories: true,
+        category: true,
       },
       where: {
         category_id: categoryId,
@@ -167,7 +167,7 @@ bookRouter.get("/author/:authorId", async (req, res) => {
         title: "asc",
       },
       include: {
-        authors: true,
+        author: true,
       },
       where: {
         author_id: authorId,
@@ -206,6 +206,35 @@ bookRouter.get("/year/:year", async (req, res) => {
     return res
       .status(500)
       .send({ message: "Failed to listed books by publication year." });
+  }
+});
+
+bookRouter.get("/", async (req, res) => {
+  const { author, category } = req.query;
+
+  const filters: { author_id?: number; category_id?: number } = {};
+
+  if (author) filters.author_id = Number(author);
+  if (category) filters.category_id = Number(category);
+
+  try {
+    const books = await prisma.book.findMany({
+      where: filters,
+      orderBy: {
+        title: "asc",
+      },
+      include: {
+        author: true,
+        category: true,
+      },
+    });
+
+    res.json(books);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: "Failed to filter books by author and/or category." });
   }
 });
 
