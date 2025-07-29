@@ -144,7 +144,7 @@ bookRouter.get("/category/:categoryId", async (req, res) => {
     res.json(booksFilteredByCategory);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    return res.status(500).send({ message: "Failed to listed books by genre." });
+    return res.status(500).send({ message: "Failed to listed books by category." });
   }
 });
 
@@ -184,7 +184,9 @@ bookRouter.get("/author/:authorId", async (req, res) => {
 bookRouter.get("/year/:year", async (req, res) => {
   try {
     if (req.params.year.length != 4) {
-      return res.status(404).send({ message: "Invalid year. Please, verify." });
+      return res
+        .status(404)
+        .send({ message: "Invalid year; year must have four digits." });
     }
 
     const year = Number(req.params.year);
@@ -203,9 +205,9 @@ bookRouter.get("/year/:year", async (req, res) => {
     res.json(booksPublishedAfter);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    return res
-      .status(500)
-      .send({ message: "Failed to listed books by publication year." });
+    return res.status(500).send({
+      message: "Failed to list books with publication year above the required year.",
+    });
   }
 });
 
@@ -228,6 +230,12 @@ bookRouter.get("/", async (req, res) => {
         category: true,
       },
     });
+
+    if (!books) {
+      return res
+        .status(404)
+        .send({ message: "Books by author and/or category not found." });
+    }
 
     res.json(books);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

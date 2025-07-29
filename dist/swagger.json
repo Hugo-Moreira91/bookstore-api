@@ -1,0 +1,468 @@
+{
+    "openapi": "3.0.4",
+    "info": {
+        "title": "Bookstore API",
+        "description": "API responsible for managing books",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/books": {
+            "get": {
+                "tags": ["Book"],
+                "summary": "Obtain all books, optionally filtered by author and/or category",
+                "parameters": [
+                    {
+                        "name": "author",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter books by author ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter books by cayegory ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieve a list of books, optionally filtered by author and/or category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Books by author and/or category not found"
+                    },
+                    "500": {
+                        "description": "Failed to filter books by author and/or category"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Book"],
+                "summary": "Register a new book",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Book registered successfully"
+                    },
+                    "500": {
+                        "description": "Failed to register book"
+                    }
+                }
+            }
+        },
+        "/books/{id}": {
+            "get": {
+                "tags": ["Book"],
+                "summary": "Obtain a specific book",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the book to be returned",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retrieve a specific book",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "500": {
+                        "description": "Failed to fetch book"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Book"],
+                "summary": "Update a book",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the book to be updated",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BookInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Book updated successfully"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "500": {
+                        "description": "Failed to update book"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Book"],
+                "summary": "Delete a book",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the book to be deleted",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Book deleted successfully"
+                    },
+                    "404": {
+                        "description": "Book not found"
+                    },
+                    "500": {
+                        "description": "Failed to remove book"
+                    }
+                }
+            }
+        },
+        "/books/category/{categoryId}": {
+            "get": {
+                "tags": ["Book", "Category"],
+                "summary": "Obtain all books for a specific category",
+                "parameters": [
+                    {
+                        "name": "categoryId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Book category ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    },
+                    "500": {
+                        "description": "Failed to listed books by category"
+                    }
+                }
+            }
+        },
+        "/books/author/{authorId}": {
+            "get": {
+                "tags": ["Book", "Author"],
+                "summary": "Obtain all books for a specific author",
+                "parameters": [
+                    {
+                        "name": "authorId",
+                        "in": "path",
+                        "required": true,
+                        "description": "Book author ID",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Author not found"
+                    },
+                    "500": {
+                        "description": "Failed to listed books by author"
+                    }
+                }
+            }
+        },
+        "/books/year/{year}": {
+            "get": {
+                "tags": ["Book", "Year"],
+                "summary": "Obtain all books published after a certain year",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "path",
+                        "required": true,
+                        "description": "Base year",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Invalid year; year must have four digits"
+                    },
+                    "500": {
+                        "description": "Failed to list books with publication year above the required year"
+                    }
+                }
+            }
+        },
+        "/authors": {
+            "post": {
+                "tags": ["Author"],
+                "summary": "Register a new author",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthorInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Author registered successfully"
+                    },
+                    "500": {
+                        "description": "Failed to register author"
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "post": {
+                "tags": ["Category"],
+                "summary": "Register a new category of books",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#components/schemas/CategoryInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Category registered successfully"
+                    },
+                    "500": {
+                        "description": "Failed to register category"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Book": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Book's ID"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Book's title"
+                    },
+                    "publication_year": {
+                        "type": "integer",
+                        "description": "Year of publication of the book"
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Book original language"
+                    },
+                    "price": {
+                        "type": "decimal",
+                        "description": "Book's price"
+                    },
+                    "author_id": {
+                        "type": "integer",
+                        "description": "Author of the book"
+                    },
+                    "author": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "Author's ID"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Author's name"
+                            },
+                            "birthdate": {
+                                "type": "date",
+                                "description": "Author's birthdate"
+                            },
+                            "nationality": {
+                                "type": "string",
+                                "description": "Author's nationality"
+                            }
+                        }
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "description": "Category of the book"
+                    },
+                    "category": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "Category ID"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Category name"
+                            }
+                        }
+                    }
+                }
+            },
+            "BookInput": {
+                "type": "object",
+                "required": ["title", "publication_year", "language", "price", "author_id", "category_id"],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "Book's title"
+                    },
+                    "publication_year": {
+                        "type": "integer",
+                        "description": "Year of publication of the book"
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Book original language"
+                    },
+                    "price": {
+                        "type": "decimal",
+                        "description": "Book's price"
+                    },
+                    "author_id": {
+                        "type": "integer",
+                        "description": "Author's ID"
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "description": "Category ID"
+                    }
+                }
+            },
+            "AuthorInput": {
+                "type": "object",
+                "required": ["name", "birthdate", "nationality"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Author's name"
+                    },
+                    "birthdate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Author's birthdate"
+                    },
+                    "nationality": {
+                        "type": "string",
+                        "description": "Author's nationality"
+                    }
+                }
+            },
+            "CategoryInput": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Category name"
+                    }
+                }
+            }
+        }
+    }
+}
