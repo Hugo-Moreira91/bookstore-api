@@ -1,0 +1,102 @@
+{
+    "openapi": "3.0.4",
+    "info": {
+        "title": "Bookstore API",
+        "description": "API responsible for managing books",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/books": {
+            "get": {
+                "tags": ["Book"],
+                "summary": "Obtain all books",
+                "responses": {
+                    "200": {
+                        "description": "Retrieve a list of books",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Book": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Book's ID"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Book's title"
+                    },
+                    "publication_year": {
+                        "type": "integer",
+                        "description": "Year of publication of the book"
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Book original language"
+                    },
+                    "price": {
+                        "type": "decimal",
+                        "description": "Book's price"
+                    },
+                    "author_id": {
+                        "type": "integer",
+                        "description": "Author of the book"
+                    },
+                    "author": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "Author's ID"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Author's name"
+                            },
+                            "birthdate": {
+                                "type": "date",
+                                "description": "Author's birthdate"
+                            },
+                            "nationality": {
+                                "type": "string",
+                                "description": "Author's nationality"
+                            }
+                        }
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "description": "Category of the book"
+                    },
+                    "category": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "Category ID"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Category name"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
